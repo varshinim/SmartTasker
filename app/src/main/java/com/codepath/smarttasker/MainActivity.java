@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
 
-        ItemListDbHelper dbHelper = new ItemListDbHelper(MainActivity.this);
+        dbHelper = new ItemListDbHelper(MainActivity.this);
         items = dbHelper.getAllItems();
 
         itemsAdapter = new TodoArrayAdapter(this, android.R.layout.simple_list_item_1, items);
@@ -42,8 +42,17 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v){
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
+        if (!itemText.equals("")) {
+            Task task = new Task();
+            task.setText(itemText);
+
+            dbHelper.insertItem(task);
+            items = dbHelper.getAllItems();
+            itemsAdapter.clear();
+            itemsAdapter.addAll(items);
+            itemsAdapter.notifyDataSetChanged();
+            etNewItem.setText("");
+        }
     }
 
     public void setupListViewListenerForLongClick(){
@@ -51,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             new AdapterView.OnItemLongClickListener(){
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id){
-                    ItemListDbHelper dbHelper = new ItemListDbHelper(MainActivity.this);
                     dbHelper.deleteItem(items.get(pos));
                     items.remove(pos);
                     itemsAdapter.notifyDataSetChanged();
@@ -80,11 +88,8 @@ public class MainActivity extends AppCompatActivity {
             int pos = data.getIntExtra("pos", -1);
             if (pos >= 0) {
                 Task task = items.get(pos);
-                Log.d("Before Update", task.getText());
                 task.setText(item);
-                Log.d("After Update", task.getText());
                 items.set(pos, task);
-                ItemListDbHelper dbHelper = new ItemListDbHelper(MainActivity.this);
                 dbHelper.updateItem(task);
                 itemsAdapter.notifyDataSetChanged();
             }

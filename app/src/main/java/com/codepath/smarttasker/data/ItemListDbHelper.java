@@ -38,10 +38,10 @@ public class ItemListDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertItem(String itemText) {
+    public boolean insertItem(Task task) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_NAME, itemText);
+        contentValues.put(COLUMN_NAME, task.getText());
         db.insert(TABLE_NAME, null, contentValues);
         return true;
     }
