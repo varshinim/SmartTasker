@@ -15,6 +15,8 @@ import com.codepath.smarttasker.adaptors.TodoArrayAdapter;
 import com.codepath.smarttasker.data.ItemListDbHelper;
 import com.codepath.smarttasker.models.Task;
 
+import static com.codepath.smarttasker.data.ItemListDbHelper.DATABASE_NAME;
+
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Task> items;
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapter, View item, int pos, long id){
                     Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                     i.putExtra("pos", pos);
-                    i.putExtra("item", items.get(pos).getText());
+                    i.putExtra("item", items.get(pos));
                     startActivityForResult(i, Edit_Item_Activity);
                 }
         });
@@ -84,11 +86,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == Edit_Item_Activity) {
-            String item = data.getStringExtra("item");
+            Task task = data.getParcelableExtra("item");
             int pos = data.getIntExtra("pos", -1);
             if (pos >= 0) {
-                Task task = items.get(pos);
-                task.setText(item);
                 items.set(pos, task);
                 dbHelper.updateItem(task);
                 itemsAdapter.notifyDataSetChanged();
