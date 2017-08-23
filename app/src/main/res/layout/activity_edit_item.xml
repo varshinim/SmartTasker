@@ -4,62 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.smarttasker.EditItemActivity">
+    tools:context="com.codepath.smarttasker.EditItemActivity"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="354dp"
-        android:layout_height="47dp"
+        android:layout_width="299dp"
+        android:layout_height="46dp"
         android:ems="10"
         android:inputType="textMultiLine"
+        android:layout_marginStart="14dp"
         tools:layout_constraintTop_creator="1"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="16dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginLeft="14dp" />
 
     <TextView
         android:id="@+id/lblDate"
-        android:layout_width="79dp"
-        android:layout_height="0dp"
+        android:layout_width="52dp"
+        android:layout_height="32dp"
         android:text="Due"
         android:ems="10"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintBottom_creator="1"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="1dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvDate"
+        tools:layout_constraintBaseline_creator="1"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintBottom_toTopOf="@+id/save"
-        app:layout_constraintTop_toTopOf="@+id/tvDate" />
+        android:layout_marginLeft="16dp" />
 
     <TextView
         android:id="@+id/tvDate"
-        android:layout_width="0dp"
+        android:layout_width="136dp"
         android:layout_height="39dp"
         android:text=""
         android:ems="10"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginEnd="71dp"
+        android:layout_marginStart="71dp"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="39dp"
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        android:layout_marginRight="71dp"
+        tools:layout_editor_absoluteX="177dp" />
+
+    <TextView
+        android:id="@+id/lblPriority"
+        android:layout_width="79dp"
+        android:layout_height="35dp"
+        android:text="Priority"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginStart="16dp"
+        tools:layout_constraintTop_creator="1"
         tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/save"
-        app:layout_constraintRight_toRightOf="@+id/editText"
-        android:layout_marginTop="67dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPicker"
+        android:layout_marginTop="54dp"
+        app:layout_constraintTop_toBottomOf="@+id/lblDate"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="67dp"
-        app:layout_constraintTop_toTopOf="@+id/editText"
-        app:layout_constraintLeft_toRightOf="@+id/lblDate"
-        android:layout_marginLeft="5dp" />
+        android:layout_marginBottom="56dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp" />
 
-
+    <NumberPicker
+        android:id="@+id/tvPicker"
+        android:layout_width="68dp"
+        android:layout_height="81dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginStart="29dp"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="218dp"
+        app:layout_constraintLeft_toRightOf="@+id/lblPriority"
+        android:layout_marginLeft="29dp"
+        tools:layout_editor_absoluteY="212dp" />
 
     <Button
         android:id="@+id/save"
@@ -68,10 +92,18 @@
         android:text="@string/save_btn"
         android:onClick="onSaveItem"
         android:layout_marginStart="16dp"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginTop="154dp"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="35dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="16dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="horizontal" />
+
 </android.support.constraint.ConstraintLayout>

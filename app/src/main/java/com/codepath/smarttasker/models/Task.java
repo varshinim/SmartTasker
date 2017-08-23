@@ -41,6 +41,13 @@ public class Task implements Parcelable {
         this.dueDate = dueDate;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+    public void setPriority (int priority) {
+        this.priority = priority;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -50,6 +57,7 @@ public class Task implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(id);
         out.writeString(text);
+        out.writeInt(priority);
         out.writeSerializable(dueDate);
     }
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -67,6 +75,7 @@ public class Task implements Parcelable {
     private Task(Parcel in) {
         id = in.readInt();
         text = in.readString();
+        priority = in.readInt();
         dueDate = (java.util.Date) in.readSerializable();
     }
 }
