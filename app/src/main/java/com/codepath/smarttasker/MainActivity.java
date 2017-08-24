@@ -15,7 +15,6 @@ import com.codepath.smarttasker.adaptors.TodoArrayAdapter;
 import com.codepath.smarttasker.data.ItemListDbHelper;
 import com.codepath.smarttasker.models.Task;
 
-import static com.codepath.smarttasker.data.ItemListDbHelper.DATABASE_NAME;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     ItemListDbHelper dbHelper;
     ListView lvItems;
     public static final int Edit_Item_Activity = 1;
+    public static final int DEFAULT_PRIORITY = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +41,26 @@ public class MainActivity extends AppCompatActivity {
         setupListViewListenerForClick();
     }
 
+    public void updateTaskList() {
+        items = dbHelper.getAllItems();
+        itemsAdapter.clear();
+        itemsAdapter.updateTaskList(items);
+    }
+
     public void onAddItem(View v){
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
         if (!itemText.equals("")) {
             Task task = new Task();
             task.setText(itemText);
+            task.setPriority(DEFAULT_PRIORITY);
 
             dbHelper.insertItem(task);
-            items = dbHelper.getAllItems();
-            itemsAdapter.clear();
-            itemsAdapter.addAll(items);
-            itemsAdapter.notifyDataSetChanged();
+            updateTaskList();
             etNewItem.setText("");
         }
     }
+
 
     public void setupListViewListenerForLongClick(){
         lvItems.setOnItemLongClickListener(
@@ -63,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id){
                     dbHelper.deleteItem(items.get(pos));
-                    items.remove(pos);
-                    itemsAdapter.notifyDataSetChanged();
+                    updateTaskList();
                     return true;
                 }
         });
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View item, int pos, long id){
                     Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                    i.putExtra("pos", pos);
                     i.putExtra("item", items.get(pos));
                     startActivityForResult(i, Edit_Item_Activity);
                 }
@@ -87,12 +90,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == Edit_Item_Activity) {
             Task task = data.getParcelableExtra("item");
-            int pos = data.getIntExtra("pos", -1);
-            if (pos >= 0) {
-                items.set(pos, task);
-                dbHelper.updateItem(task);
-                itemsAdapter.notifyDataSetChanged();
-            }
+            dbHelper.updateItem(task);
+            updateTaskList();
         }
     }
 }

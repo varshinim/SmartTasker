@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class ItemListDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION =  3;
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "tasks.db";
     public static final String TABLE_NAME = "task";
     public static final String COLUMN_ID = "_id";
@@ -28,6 +28,11 @@ public class ItemListDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRIORITY = "priority";
     public static final String COLUMN_DUE_DATE = "dueDate";
 
+    public String formatDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(date);
+        return dateStr;
+    }
 
     public ItemListDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -55,7 +60,9 @@ public class ItemListDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NAME, task.getText());
-        // contentValues.put(COLUMN_DUE_DATE, task.getDueDate().toString());
+        if (task.getDueDate() != null) {
+            contentValues.put(COLUMN_DUE_DATE, formatDate(task.getDueDate()));
+        }
         contentValues.put(COLUMN_PRIORITY, task.getPriority());
         db.insert(TABLE_NAME, null, contentValues);
         return true;
@@ -67,9 +74,7 @@ public class ItemListDbHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_NAME, task.getText());
         contentValues.put(COLUMN_PRIORITY, task.getPriority());
         if (task.getDueDate() != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String dateStr = sdf.format(task.getDueDate());
-            contentValues.put(COLUMN_DUE_DATE, dateStr);
+            contentValues.put(COLUMN_DUE_DATE, formatDate(task.getDueDate()));
         }
         db.update(TABLE_NAME, contentValues, COLUMN_ID + " = ?", new String[] { Integer.toString(task.getId()) } );
         return true;
@@ -117,10 +122,25 @@ public class ItemListDbHelper extends SQLiteOpenHelper {
         Collections.sort(items, new Comparator<Task>() {
             @Override
             public int compare(Task task, Task t1) {
-                int i = task.getDueDate().compareTo(t1.getDueDate());
-                if (i == 0) {
-                    if (task.getPriority() >= t1.getPriority()) {
+                int i = 0;
+                if (task.getDueDate() == null && t1.getDueDate() == null) {
+                    if (task.getPriority() > t1.getPriority()) {
                         i = 1;
+                    } else if (task.getPriority() < t1.getPriority()) {
+                        i = -1;
+                    }
+                }
+                else if (task.getDueDate() != null && t1.getDueDate() == null) i = -1;
+                else if (task.getDueDate() == null && t1.getDueDate() != null) i = 1;
+                else {
+                    i = task.getDueDate().compareTo(t1.getDueDate());
+                    if (i == 0) {
+                        // lower the number higher the priority
+                        if (task.getPriority() > t1.getPriority()) {
+                            i = 1;
+                        } else if (task.getPriority() < t1.getPriority()) {
+                            i = -1;
+                        }
                     }
                 }
                 return i;

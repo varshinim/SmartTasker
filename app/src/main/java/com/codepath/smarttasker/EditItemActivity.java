@@ -68,15 +68,13 @@ public class EditItemActivity extends AppCompatActivity {
         Intent data = new Intent();
         task.setText(etName.getText().toString());
         data.putExtra("item", task);
-        int pos = getIntent().getIntExtra("pos", -1);
-        data.putExtra("pos", pos);
         // Activity finished ok, return the data
         setResult(RESULT_OK, data);
         finish();
     }
 
     public String formatDate(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
         String dateStr = sdf.format(date);
         return dateStr;
     }
